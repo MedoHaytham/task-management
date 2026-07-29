@@ -163,9 +163,13 @@ Ensure you have the following installed on your local system:
 - `POST /signup` - Register a new user
 - `POST /login` - User login
 - `POST /logout` - Log out and clear auth tokens
-- `POST /refresh-token` - Refresh access token using refresh token
+- `POST /refreshToken` - Refresh access token using refresh token
 - `GET /me` - Get current logged-in user profile
+- `PATCH /updateMe` - Update current logged-in user details
+- `DELETE /deleteMe` - Delete current logged-in user account
+- `GET /lookup?email=...` - Lookup user by email (for project member addition)
 - `GET /` *(Admin)* - Get all users
+- `GET /:id` *(Admin)* - Get user details by ID
 - `PATCH /:id` *(Admin)* - Update user role or details
 - `DELETE /:id` *(Admin)* - Delete a user
 
@@ -173,14 +177,16 @@ Ensure you have the following installed on your local system:
 - `GET /` - List all accessible projects
 - `POST /` - Create a new project
 - `GET /:id` - Get single project details
-- `PATCH /:id` - Update project details
-- `DELETE /:id` - Delete project
+- `PATCH /:id` *(Owner)* - Update project details
+- `DELETE /:id` *(Owner)* - Delete project
+- `POST /:id/members` *(Owner)* - Add member to project
+- `DELETE /:id/members` *(Owner)* - Remove member from project
 
-### Tasks (`/api/v1/tasks`)
-- `GET /` - List tasks (supports filtering by project, status, priority)
-- `POST /` - Create a task
+### Tasks (`/api/v1/projects/:projectId/tasks`)
+- `GET /` - List tasks in a project (supports filtering by status, priority)
+- `POST /` - Create a task in a project
 - `GET /:id` - Get task details
-- `PATCH /:id` - Update task (status, priority, assigned user)
+- `PATCH /:id` - Update task (status, priority, assignee, etc.)
 - `DELETE /:id` - Delete task
 
 ---
