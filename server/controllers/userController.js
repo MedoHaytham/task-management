@@ -6,7 +6,7 @@ const factory = require('./handlerFactory');
 const { filterObj } = require('../utils/filterObject');
 
 // admin only handlers
-exports.getAllUsers = factory.getAll(User, ['name', 'email']);
+exports.getAllUsers = factory.getAll(User, ['name', 'email'], { includeInactive: true });
 exports.getUser = factory.getOne(User, null, { includeInactive: true });
 
 // whitelist enforced: password/passwordConfirm/refreshToken can never be
@@ -64,3 +64,26 @@ exports.getMe = (req, res, next) => {
   req.params.id = req.user._id;
   next();
 }
+
+exports.getUserByEmail = asyncWrapper(async (req, res, next) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return next(new AppError('Please provide an email to search for', 400));
+  }
+
+  const user = await User.findOne({ email: email.toLowerCase() }).select(
+    'name email'
+  );
+
+  if (!user) {
+    return next(new AppError('No user found with that email', 404));
+  }
+
+  res.status(200).json({
+    status: httpStatus.SUCCESS,
+    data: {
+      data: user,
+    },
+  });
+});

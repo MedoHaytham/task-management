@@ -22,6 +22,9 @@ router.get('/me', userController.getMe, userController.getUser);
 router.patch('/updateMe', userController.updateMe);
 router.delete('/deleteMe', userController.deleteMe);
 
+
+router.get('/lookup', userController.getUserByEmail);
+
 // Everything below is admin-only
 router.use(allowedTo(USER_ROLES.ADMIN));
 

@@ -56,6 +56,7 @@ exports.createTask = asyncWrapper(async (req, res, next) => {
 });
 
 exports.updateTask = asyncWrapper(async (req, res, next) => {
+  if (req.body.assignee === '') req.body.assignee = null;
   if (!validateAssignee(req.body.assignee, req.project, next)) return;
 
   const filteredBody = filterObj(
