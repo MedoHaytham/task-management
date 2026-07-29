@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Users, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Users, Trash2, Pencil } from 'lucide-react';
 import { useAuthGuard } from '@/hooks/useAuthGuard';
 import { useGetMeQuery } from '@/features/userSlice';
 import {
@@ -16,6 +16,7 @@ import LoadingScreen from './LoadingScreen';
 import TaskBoard from './TaskBoard';
 import CreateTaskModal from './CreateTaskModal';
 import MembersModal from './MembersModal';
+import EditProjectModal from './EditProjectModal';
 import { useAlert } from '@/context/AlertContext';
 
 export default function ProjectDetailClient({ projectId }) {
@@ -25,6 +26,7 @@ export default function ProjectDetailClient({ projectId }) {
 
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
+  const [isEditProjectModalOpen, setIsEditProjectModalOpen] = useState(false);
   const [filters, setFilters] = useState({ priority: '', assignee: '' });
 
   const { data: meData } = useGetMeQuery();
@@ -119,14 +121,26 @@ export default function ProjectDetailClient({ projectId }) {
             </button>
 
             {isOwner && (
-              <button
-                type="button"
-                onClick={handleDeleteProject}
-                aria-label="Delete project"
-                className="text-grey-400 hover:text-error border border-grey-200 rounded-md p-2 transition-colors cursor-pointer"
-              >
-                <Trash2 size={15} />
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() => setIsEditProjectModalOpen(true)}
+                  aria-label="Edit project"
+                  title="Edit project"
+                  className="text-grey-400 hover:text-primary border border-grey-200 rounded-md p-2 transition-colors cursor-pointer"
+                >
+                  <Pencil size={15} />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteProject}
+                  aria-label="Delete project"
+                  title="Delete project"
+                  className="text-grey-400 hover:text-error border border-grey-200 rounded-md p-2 transition-colors cursor-pointer"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -178,6 +192,12 @@ export default function ProjectDetailClient({ projectId }) {
       <MembersModal
         isOpen={isMembersModalOpen}
         onClose={() => setIsMembersModalOpen(false)}
+        project={project}
+      />
+
+      <EditProjectModal
+        isOpen={isEditProjectModalOpen}
+        onClose={() => setIsEditProjectModalOpen(false)}
         project={project}
       />
     </>
