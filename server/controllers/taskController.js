@@ -12,8 +12,9 @@ exports.restrictToProjectTasks = (req, res, next) => {
 };
 
 exports.getAllTasks = factory.getAll(Task, ['title', 'description']);
-exports.getTask = factory.getOne(Task);
-
+exports.getTask = factory.getOne(Task, null, {}, req => ({
+  project: req.params.projectId,
+}));
 // Checks that the given assignee (if provided) is actually the owner
 // or a member of the parent project — req.project is already loaded
 // and populated by the checkProjectAccess middleware
@@ -67,10 +68,11 @@ exports.updateTask = asyncWrapper(async (req, res, next) => {
     'assignee'
   );
 
-  const task = await Task.findByIdAndUpdate(req.params.id, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
+  const task = await Task.findOneAndUpdate(
+    { _id: req.params.id, project: req.params.projectId },
+    filteredBody,
+    { new: true, runValidators: true }
+  );
 
   if (!task) {
     return next(new AppError('No task found with that ID', 404));
@@ -84,4 +86,6 @@ exports.updateTask = asyncWrapper(async (req, res, next) => {
   });
 });
 
-exports.deleteTask = factory.deleteOne(Task);
+exports.deleteTask = factory.deleteOne(Task, req => ({
+  project: req.params.projectId,
+}));

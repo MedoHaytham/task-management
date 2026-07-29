@@ -34,10 +34,11 @@ exports.getAll = (Model, searchFields = [], queryOptions = {}) => asyncWrapper(
   }
 );
 
-exports.getOne = (Model, populateOptions, queryOptions = {}) => asyncWrapper(
+exports.getOne = (Model, populateOptions, queryOptions = {}, filterFn) => asyncWrapper(
   async (req, res, next) => {
+    const filter = { _id: req.params.id, ...(filterFn ? filterFn(req) : {}) };
 
-    let query = Model.findById(req.params.id).setOptions(queryOptions);
+    let query = Model.findOne(filter).setOptions(queryOptions);
     if (populateOptions) {
       query = query.populate(populateOptions);
     }
@@ -103,9 +104,10 @@ exports.updateOne = (Model, allowedFields = [], queryOptions = {}) => asyncWrapp
   }
 );
 
-exports.deleteOne = Model => asyncWrapper(
+exports.deleteOne = (Model, filterFn) => asyncWrapper(
   async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id);
+    const filter = { _id: req.params.id, ...(filterFn ? filterFn(req) : {}) };
+    const doc = await Model.findOneAndDelete(filter);
 
     if (!doc) {
       return next(new AppError('No document found with that ID', 404));
