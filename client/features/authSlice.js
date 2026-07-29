@@ -41,7 +41,7 @@ const authApiSlice = apiSlice.injectEndpoints({
           // handled by the caller via .unwrap()
         }
       },
-      invalidatesTags: ['User'],
+      invalidatesTags: ['User', 'Project', 'Task', 'UsersList'],
     }),
 
     login: builder.mutation({
@@ -58,7 +58,7 @@ const authApiSlice = apiSlice.injectEndpoints({
           // handled by the caller via .unwrap()
         }
       },
-      invalidatesTags: ['User'],
+      invalidatesTags: ['User', 'Project', 'Task', 'UsersList'],
     }),
 
     logout: builder.mutation({

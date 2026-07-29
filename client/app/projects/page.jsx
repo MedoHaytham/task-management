@@ -14,7 +14,9 @@ export default function ProjectsPage() {
   const { isReady } = useAuthGuard();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data, isLoading, error } = useGetProjectsQuery();
+  const { data, isLoading, error } = useGetProjectsQuery(undefined, {
+    skip: !isReady,
+  });
   const projects = data?.data?.data ?? [];
 
   if (!isReady) return <LoadingScreen />;

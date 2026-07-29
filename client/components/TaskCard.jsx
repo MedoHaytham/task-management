@@ -15,7 +15,7 @@ export default function TaskCard({ task, onDelete, onStatusChange, onEdit }) {
     <div className="bg-white rounded-md shadow-card p-4 group">
       <div className="flex items-start justify-between gap-2 mb-2">
         <p className="text-sm font-semibold text-grey-700">{task.title}</p>
-        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+        <div className="flex items-center gap-1">
           {onEdit && (
             <button
               type="button"
