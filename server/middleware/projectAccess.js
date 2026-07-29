@@ -11,7 +11,7 @@ exports.checkProjectAccess = asyncWrapper(async (req, res, next) => {
   // or `projectId` (nested task routes)
   const projectId = req.params.projectId || req.params.id;
 
-  const project = await Project.findById(projectId).populate('tasks');
+  const project = await Project.findById(projectId);
 
   if (!project) {
     return next(new AppError('No project found with that ID', 404));

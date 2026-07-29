@@ -17,14 +17,15 @@ exports.getAllProjects = factory.getAll(Project, ['name', 'description']);
 
 // No need to query again — checkProjectAccess middleware already
 // fetched the project and attached it to req.project
-exports.getProject = (req, res) => {
+exports.getProject = asyncWrapper(async (req, res, next) => {
+  await req.project.populate('tasks');
   res.status(200).json({
     status: httpStatus.SUCCESS,
     data: {
-      data: req.project,
+      data: req.project
     },
   });
-};
+});
 
 // owner is always the logged-in user, never taken from the request body
 exports.createProject = factory.createOne(Project, req => ({
